@@ -50,14 +50,16 @@ def kohonen():
     np.random.shuffle(i_random)
     
     for t, i in enumerate(i_random):
+        print(t)
+        print(i)
         som_step(centers, data[i,:],neighbor,eta,sigma)
 
 
     # for visualization, you can use this:
-    for i in range(size_k**2):
-        plb.subplot(size_k,size_k,i)
+    for i in range(0,size_k**2):
+        plb.subplot(size_k,size_k,i+1)
         
-        plb.imshow(np.reshape(centers[i,:], [28, 28]),interpolation='bilinear')
+        plb.imshow(np.reshape(centers[i,:], [28, 28]),cmap='Greys',interpolation='bilinear')
         plb.axis('off')
         
     # leave the window open at the end of the loop

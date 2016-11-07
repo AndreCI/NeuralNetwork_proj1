@@ -31,7 +31,7 @@ def kohonen():
     
     #set the width of the neighborhood via the width of the gaussian that
     #describes it
-    sigma = 2.0
+    sigma = 3.0
     
     #initialise the centers randomly
     centers = np.random.rand(size_k**2, dim) * data_range
@@ -40,7 +40,7 @@ def kohonen():
     neighbor = np.arange(size_k**2).reshape((size_k, size_k))
 
     #set the learning rate
-    eta = 0.9 # HERE YOU HAVE TO SET YOUR OWN LEARNING RATE
+    eta = 0.5 # HERE YOU HAVE TO SET YOUR OWN LEARNING RATE
     
     #set the maximal iteration count
     tmax = 5000 # this might or might not work; use your own convergence criterion
@@ -88,10 +88,8 @@ def som_step(centers,data,neighbor,eta,sigma):
     
     #find the best matching unit via the minimal distance to the datapoint
     b = np.argmin(np.sum((centers - np.resize(data, (size_k**2, data.size)))**2,1))
-
     # find coordinates of the winner
     a,b = np.nonzero(neighbor == b)
-        
     # update all units
     for j in range(size_k**2):
         # find coordinates of this unit

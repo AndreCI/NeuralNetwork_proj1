@@ -5,11 +5,12 @@ Reinforcement Learning.
 import numpy as np
 import matplotlib.pylab as plb
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
-def rewritedata(x):
-    data_matrix = np.ones((np.shape(x)[0],28,28))
+def rewritedata(indata):
+    data_matrix = np.ones((np.shape(indata)[0],28,28))
     for i in range (0,28):
-        data_matrix[:,i,:] = data[:,i*28:(i+1)*28]
+        data_matrix[:,i,:] = indata[:,i*28:(i+1)*28]
     return data_matrix
 
 def visualize(number,label):

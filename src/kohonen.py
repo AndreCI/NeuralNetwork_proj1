@@ -89,7 +89,8 @@ def som_step(centers,data,neighbor,eta,sigma):
     size_k = int(np.sqrt(len(centers)))
     
     #find the best matching unit via the minimal distance to the datapoint
-    b = np.argmin(np.sum((centers - np.resize(data, (size_k**2, data.size)))**2,1))
+    b = np.argmin(np.sum(np.abs(centers - np.resize(data,(size_k**2,data.size))),1))
+    #b = np.argmin(np.sum((centers - np.resize(data, (size_k**2, data.size)))**2,1))
     # find coordinates of the winner
     a,b = np.nonzero(neighbor == b)
     # update all units

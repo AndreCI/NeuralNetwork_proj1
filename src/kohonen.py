@@ -14,13 +14,13 @@ def kohonen():
     data_range = 255.0
     
     # load in data and labels    
-    data = np.array(np.loadtxt('data.txt'))
-    labels = np.loadtxt('labels.txt')
+    data = np.array(np.loadtxt('data/data.txt'))
+    labels = np.loadtxt('data/labels.txt')
 
     # select 4 digits    
-    name = 'Marc-oliver Gewaltig' # REPLACE BY YOUR OWN NAME
+    name = 'André Cibils' # REPLACE BY YOUR OWN NAME
     targetdigits = name2digits(name) # assign the four digits that should be used
-    print targetdigits # output the digits that were selected
+    print(targetdigits) # output the digits that were selected
     # this selects all data vectors that corresponds to one of the four digits
     data = data[np.logical_or.reduce([labels==x for x in targetdigits]),:]
     

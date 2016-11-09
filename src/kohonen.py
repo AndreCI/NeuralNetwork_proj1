@@ -87,7 +87,7 @@ def som_step(centers,data,neighbor,eta,sigma):
     """
     
     size_k = int(np.sqrt(len(centers)))
-    
+    new_centers = np.copy(centers)
     #find the best matching unit via the minimal distance to the datapoint
     b = np.argmin(np.sum(np.abs(centers - np.resize(data,(size_k**2,data.size))),1))
     #b = np.argmin(np.sum((centers - np.resize(data, (size_k**2, data.size)))**2,1))
@@ -100,9 +100,13 @@ def som_step(centers,data,neighbor,eta,sigma):
         # calculate the distance and discounting factor
         disc=gauss(np.sqrt((a-a1)**2+(b-b1)**2),[0, sigma])
         # update weights        
-        centers[j,:] += disc * eta * (data - centers[j,:])
+        new_centers[j,:] += disc * eta * (data - centers[j,:])
+    return new_centers
         
-
+def MSE(old_centers,centers):
+    errors = np.sum(old_centers[:,:] - centers[:,:],axis=1)
+    return np.square(errors)/np.shape(centers)[1]
+        
 def gauss(x,p):
     """Return the gauss function N(x), with mean p[0] and std p[1].
     Normalized such that N(x=p[0]) = 1.

@@ -17,6 +17,9 @@ def visualize(number,label):
     assert np.shape(number)==(28,28)
     #plt.title('Image of ',label)
     #plt.annotate(('label is ',label),xy=(2, 1))
-    plt.title(("An image of a %s"%label))
+    plt.figure(figsize=(6,2))
+    #plt.axis("off")
+    plt.title(("An hand-written %s"%label))
     plt.imshow(number,cmap='Greys')
-    plt.show()
+    plt.savefig("plots_report/data_visu.png")
+    

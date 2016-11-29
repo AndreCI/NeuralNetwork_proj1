@@ -102,11 +102,7 @@ def som_step(centers,data,neighbor,eta,sigma):
         # update weights        
         new_centers[j,:] += disc * eta * (data - centers[j,:])
     return new_centers
-        
-def MSE(old_centers,centers):
-    errors = np.sum(old_centers[:,:] - centers[:,:],axis=1)
-    return np.square(errors)/np.shape(centers)[1]
-        
+ 
 def gauss(x,p):
     """Return the gauss function N(x), with mean p[0] and std p[1].
     Normalized such that N(x=p[0]) = 1.

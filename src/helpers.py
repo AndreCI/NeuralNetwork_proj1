@@ -84,3 +84,76 @@ def check_conv(losses, conv_fact,nbrValues):
     p1 = sum(part1)/nbrValues
     p2 = sum(part2)/nbrValues
     return p1, p2, p1/p2>conv_fact
+
+def visualize_neurons(path,centers,eta,ite_num):
+    plb.close('all')
+    plb.figure(ite_num)
+    for i in range(0,size_k**2):
+        plb.subplot(size_k,size_k,i+1)
+        plb.imshow(np.reshape(centers[i,:], [28, 28]),cmap='Greys',interpolation='bilinear')
+        plb.axis('off')
+    plb.annotate("plot_num:"+str(ite_num)+";"+str(eta),xy=(0,27))
+    plb.savefig((str(path)+"/plot_"+"_sigma"+str(sigma)+"_eta"+str(eta)+"_num"+str(ite_num)+".png"))
+    plb.close(i)
+    plb.show()
+    plb.draw()
+    
+def get_attribute_visualize_label(centers_label):
+    plb.plot(centers_label)
+    
+def visualize_label(path,centers_label,eta,ite_num):
+    plb.close('all')
+    plb.figure(ite_num)
+    for i in range(0,size_k**2):
+        labe = centers_label[i,:]
+        lab = [value for value in labe if value != 0]
+        
+        plb.subplot(size_k,size_k,i+1)
+        plb.axis([0,4,0,max(lab)+1])
+        plb.axis('off')
+        plb.bar([0,1,2,3],lab,1.0)
+        for k in range(0,np.shape(targetdigits)[0]):
+            plb.annotate(targetdigits[k],xy=(k,lab[k]+0.2))
+            #if(targetdigits[k]==max(targetdigits)):
+                #plb.annotate("WINNER",xy=(i,lab[k]+0.6))    
+    plb.savefig((str(path)+"/labels_"+"_sigma"+str(sigma)+"_eta"+str(eta)+"_num"+str(ite_num)+".png"))
+    plb.show()
+    plb.plot()
+    
+    
+def som_step_labels(centers,centers_label,data,label,neighbor,eta,sigma):
+    """Performs one step of the sequential learning for a 
+    self-organized map (SOM).
+    
+      centers = som_step(centers,data,neighbor,eta,sigma)
+    
+      Input and output arguments: 
+       centers  (matrix) cluster centres. Have to be in format:
+                         center X dimension
+       data     (vector) the actually presented datapoint to be presented in
+                         this timestep
+       neighbor (matrix) the coordinates of the centers in the desired
+                         neighborhood.
+       eta      (scalar) a learning rate
+       sigma    (scalar) the width of the gaussian neighborhood function.
+                         Effectively describing the width of the neighborhood
+    """
+    
+    size_k = int(np.sqrt(len(centers)))
+    new_centers = np.copy(centers)
+    new_centers_label = np.copy(centers_label)
+    #find the best matching unit via the minimal distance to the datapoint
+    b = np.argmin(np.sum(np.abs(centers - np.resize(data,(size_k**2,data.size))),1))
+    #b = np.argmin(np.sum((centers - np.resize(data, (size_k**2, data.size)))**2,1))
+    # find coordinates of the winner
+    a,b = np.nonzero(neighbor == b)
+    # update all units
+    for j in range(size_k**2):
+        # find coordinates of this unit
+        a1,b1 = np.nonzero(neighbor==j)
+        # calculate the distance and discounting factor
+        disc=gauss(np.sqrt((a-a1)**2+(b-b1)**2),[0, sigma])
+        # update weights        
+        new_centers[j,:] += disc * eta * (data - centers[j,:])
+        new_centers_label[j,label] += disc * eta
+    return new_centers, new_centers_label

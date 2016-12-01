@@ -138,6 +138,8 @@ def som_step_labels(centers,centers_label,data,label,neighbor,eta,sigma):
        sigma    (scalar) the width of the gaussian neighborhood function.
                          Effectively describing the width of the neighborhood
     """
+    label_ = np.zeros(10)
+    label_[label] = 1
     
     size_k = int(np.sqrt(len(centers)))
     new_centers = np.copy(centers)
@@ -155,5 +157,17 @@ def som_step_labels(centers,centers_label,data,label,neighbor,eta,sigma):
         disc=gauss(np.sqrt((a-a1)**2+(b-b1)**2),[0, sigma])
         # update weights        
         new_centers[j,:] += disc * eta * (data - centers[j,:])
-        new_centers_label[j,label] += disc * eta
+        new_centers_label[j,:] += disc * eta * (label_ - centers_label[j,:])
     return new_centers, new_centers_label
+
+def update_sigma(sigma, phi, floor):
+    new = sigma*phi
+    if(new<floor):
+        new = floor
+    return new
+
+def update_step(step, phi, ceil):
+    new = step*phi
+    if(new>ceil):
+        new = ceil
+    return new
